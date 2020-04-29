@@ -36,12 +36,11 @@ summary(df2[, c("price", "user_rating", "lang_num", "size_bytes")])
 
 # 5. Какое приложение имеет наибольшее количество языков?
 
-priciest <- filter(df2, price == max(df2$price))
-View(priciest$name)
+biggest <- filter(df2, lang_num == max(df2$lang_num))
+View(biggest$name)
 
 
 # 6. Определите квантили переменных «цена», «user_rating» и «lang_num».
-
 quantile(df2$price)
 quantile(df2$user_rating)
 quantile(df2$lang_num)
@@ -76,7 +75,7 @@ v(df2$lang_num)
 # Сделать выводы о наличии выбросов. 
 
 boxplot(df2$size_bytes, ylab = "Bytes")
-boxplot(df2$price, ylab = "Dollars")
+boxplot(df2$price, ylab = "Ценв")
 boxplot(df2$rating_count_tot, ylab = "Raitings")
 boxplot(df2$user_rating, ylab = "Stars")
 boxplot(df2$lang_num, ylab = "Languages")
@@ -92,16 +91,26 @@ pie(table(df2$prime_genre), main = "Жанры", xlab = "Вид жанра", rad
 # Сделать выводы.
 
 hist(df2$price, main = "Плотность распределения цены", xlab = "Цена", ylab = "Плотность", freq = FALSE)
+curve(dnorm(x, mean(df2$price), sd = sd(df2$price)), add = TRUE)
+
 hist(df2$size_bytes, main = "Плотность распределения размера", xlab = "размер", ylab = "Плотность", freq = FALSE)
+curve(dnorm(x, mean(df2$size_bytes), sd = sd(df2$size_bytes)), add = TRUE)
+
 hist(df2$rating_count_tot, main = "Плотность распределения количества рейтингов", xlab = "Количество рейтингов", ylab = "Плотность", freq = FALSE)
+curve(dnorm(x, mean(df2$rating_count_tot), sd = sd(df2$rating_count_tot)), add = TRUE)
+
 hist(df2$user_rating, main = "Плотность распределения рейтингов", xlab = "Рейтинг", ylab = "Плотность", freq = FALSE)
+curve(dnorm(x, mean(df2$user_rating), sd = sd(df2$user_rating)), add = TRUE)
+
 hist(df2$lang_num, main = "Плотность распределения количесва языков", xlab = "Количество языков", ylab = "Плотность", freq = FALSE)
+curve(dnorm(x, mean(df2$lang_num), sd = sd(df2$lang_num)), add = TRUE)
 
 
 # 11. Какой жанр наиболее распространен? 
 
 tempGenres <- summary(df2$prime_genre)
 biggestGenre = tempGenres[tempGenres == max(tempGenres)]
+print(biggestGenre)
 
 # 12. Создайте новый фрейм данных из существующего фрейма данных df2, 
 # чтобы новый фрейм данных содержал только приложения, соответствующие 

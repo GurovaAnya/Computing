@@ -1,11 +1,13 @@
 # Задание 2
 
-# 1. 1.	Загрузите файл demography.csv. В нём содержатся данные по населению 
+# 1. Загрузите файл demography.csv. В нём содержатся данные по населению 
 # Белгородской и Калужской областей за 2016 год (источник — Росстат).
 
 install.packages("ggplot2")
 library("ggplot2")
 df <- read.csv("https://raw.githubusercontent.com/allatambov/R-programming-3/master/seminars/sem8-09-02/demography.csv", encoding = "UTF-8")
+View(df)
+
 
 # 2.	Создайте переменную young_share — процент населения возраста, моложе трудоспособного.
 
@@ -23,8 +25,8 @@ df <- df %>% mutate(old_share = old_share)
 # 3. Постройте гистограмму для доли трудоспособного населения в процентах. 
 # Измените цвет гистограммы, добавьте rugs. Добавьте вертикальную линию, 
 # которая отчерчивает медианное значение доли трудоспособного населения в процентах
-ggplot(data = df, aes(x = trud_share)) + geom_histogram(fill = "tomato", color = "black") 
-+geom_vline(xintercept = median(df$trud_share), color = "blue") + geom_rug()
+ggplot(data = df, aes(x = trud_share)) + geom_histogram(fill = "tomato", color = "black") +
+  geom_vline(xintercept = median(df$trud_share), color = "blue") + geom_rug()
 
 
 # 4. Постройте сглаженные графики плотности распределения для доли трудоспособного 
