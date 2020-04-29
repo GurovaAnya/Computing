@@ -36,9 +36,8 @@ summary(df2[, c("price", "user_rating", "lang_num", "size_bytes")])
 
 # 5. Какое приложение имеет наибольшее количество языков?
 
-biggest <- filter(df2, lang_num == max(df2$lang_num))
-View(biggest$name)
-
+biggest <- AppleStore[which.max(df2$lang_num), "name"]
+print(biggest)
 
 # 6. Определите квантили переменных «цена», «user_rating» и «lang_num».
 quantile(df2$price)
@@ -47,28 +46,18 @@ quantile(df2$lang_num)
 
 # 7. Для всех количественных переменных рассчитать коэффициенты эксцесса 
 # и асимметрии и коэффициент вариации. Сделать выводы.
+
 install.packages("moments")
 library("moments")
 
-kurtosis(df2$size_bytes, na.rm = TRUE)
-kurtosis(df2$price, na.rm = TRUE)
-kurtosis(df2$rating_count_tot, na.rm = TRUE)
-kurtosis(df2$user_rating, na.rm = TRUE)
-kurtosis(df2$lang_num, na.rm = TRUE)
-skewness(df2$size_bytes, na.rm = TRUE)
-skewness(df2$price, na.rm = TRUE)
-skewness(df2$rating_count_tot, na.rm = TRUE)
-skewness(df2$user_rating, na.rm = TRUE)
-skewness(df2$lang_num, na.rm = TRUE)
-
 v <- function(x){
-return(sd(x, na.rm = TRUE)/mean(x, na.rm = TRUE)*100)
+  return(sd(x, na.rm = TRUE)/mean(x, na.rm = TRUE)*100)
 }
-v(df2$size_bytes)
-v(df2$price)
-v(df2$rating_count_tot)
-v(df2$user_rating)
-v(df2$lang_num)
+
+num <- select(AppleStore, size_bytes, price, rating_count_tot, user_rating, lang_num)
+apply(num, 2, kurtosis)
+apply(num, 2, skewness)
+apply(num, 2, v)
 
 # 8. Для всех количественных переменных построить  Boxplot.
 # Обязательно сделать подписи на графике. 
@@ -143,7 +132,6 @@ ks.test(gr1$price, "pnorm", mean_games, sd_games)
 mean_nogames <- mean(gr2$price)
 sd_nogames <- sd(gr2$price)
 ks.test(gr2$price, "pnorm", mean_nogames, sd_nogames)
-# p-value < 2.2e-16, с вероятностью 99,.. распределение показателя "цена" для обеих групп не является нормальным 
 
 # критерий Шапиро-Уилка
 # группа 1 - игры
@@ -152,5 +140,4 @@ shapiro.test(gr1$price)
 # группа 2 - не игры
 shapiro.test(gr2$price)
 
-# p-value < 2.2e-16, с вероятностью 99,.. распределение показателя "цена" для обеих групп не является нормальным 
 
