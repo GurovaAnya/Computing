@@ -13,12 +13,16 @@ str(villa)
 # 3. Рассчитайте и проинтерпретируйте описательные статистики по каждой переменной, включая фиктивную переменную.
 
 summary(villa)
+library(dplyr)
 
+# уберем лишние значения
+villa <- filter(villa, Eco != 2)
+View(villa)
 
 # 4. Проанализируйте исходную выборку на наличие статистических выбросов, используя анализ ящичковых диаграмм. Сделайте выводы.
+library(ggplot2)
 library(reshape)
-library(dplyr)
-villaValues <- select(villa, -c("N", "Eco"))
+villaValues <- select(villa, -c("N"))
 villaMelt <- melt(as.data.frame(villaValues))
 
 ggplot(villaMelt,aes(x = variable, y = value)) +
@@ -40,7 +44,10 @@ apply(villaValues, 2, v)
 
 # a.	гистограммы
 
-ggplot(villaValues, aes(x = Price)) + geom_histogram(fill = "tomato", color = "black") 
+hist(villaValues$Price, breaks = 20, freq = F, main = "Гистограмма цены", col = "tomato")
+curve(dnorm(x, mean(villaValues$Price), sd(villaValues$Price)), 
+      add = T)
+
 
 # b.	коэффициентов асимметрии и эксцесса
 
@@ -55,22 +62,24 @@ qqnorm(villa$Price, main = "Q-Q Plot Цены")
 qqline(villa$Price)
 
 # d.	проверки гипотезы о нормально распределении ( на уровне значимости 0,05) с помощью критериев: 
-# Колмогорова-Смирнова, Шапиро-Уилка,  Лиллифорса, Крамера-фон Мизеса и Андерсона-Дарлинга, 
-# Шапиро-Франсиа,  хи-квадрат Пирсона.  Сделайте выводы
-
+# Колмогорова-Смирнова
 library(nortest)
 
 ks.test(villa$Price, "pnorm", mean = mean(villa$Price, na.rm = T), 
         sd = sd(villa$Price, na.rm = T))
 
+# Шапиро-Уилка
 shapiro.test(villa$Price)
 
+# Лиллифорса
 lillie.test(villa$Price)
 
+# Крамера-фон Мизеса и Андерсона-Дарлинга
 cvm.test(villa$Price)
-
 ad.test(villa$Price)
 
+# Шапиро-Франсиа
 sf.test(villa$Price)
 
+# хи-квадрат Пирсона 
 pearson.test(villa$Price)
